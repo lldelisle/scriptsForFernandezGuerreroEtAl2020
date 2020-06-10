@@ -1,0 +1,5 @@
+1	ATAC_E13_FB	E13_FB_R1_merge.fastq.gz	E13_FB_R2_merge.fastq.gz	mm10
+2	ATAC_E14_FDE_Rep1	FLE14_5_rep1_R1_merge.fastq.gz	FLE14_5_rep1_R2_merge.fastq.gz	mm10
+3	ATAC_E14_FDE_Rep2	FLE14_5_rep2_R1_merge.fastq.gz	FLE14_5_rep2_R2_merge.fastq.gz	mm10
+4	ATAC_E14_HDE_Rep1	HLE14_5_rep1_R1_merge.fastq.gz	HLE14_5_rep1_R2_merge.fastq.gz	mm10
+5	ATAC_E14_HDE_Rep2	HLE14_5_rep2_R1_merge.fastq.gz	HLE14_5_rep2_R2_merge.fastq.gz	mm10
