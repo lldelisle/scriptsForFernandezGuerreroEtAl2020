@@ -1,0 +1,105 @@
+Block Type	96well																			
+Chemistry	SYBR_GREEN																			
+Experiment File Name	XXX																			
+Experiment Run End Time	XXX																			
+Instrument Type	steponeplus																			
+Passive Reference	ROX																			
+																				
+Well	Sample Name	Target Name	Task	Reporter	Quencher	Cт	Cт Mean	Cт SD	Quantity	Quantity Mean	Quantity SD	Automatic Ct Threshold	Ct Threshold	Automatic Baseline	Baseline Start	Baseline End	Tm1	Tm2	Tm3	Comments
+A1																				
+A2																				
+A3																				
+A4																				
+A5																				
+A6																				
+A7																				
+A8																				
+A9																				
+A10	49FL	Hoxc13	STANDARD	SYBR	None	32.5565223693848	32.5458984375	0.081859603524208	1			0	1	1	3	25	85.3919677734375			
+A11	49FL	Hoxc13	STANDARD	SYBR	None	32.4592437744141	32.5458984375	0.081859603524208	1			0	1	1	3	24	85.3911514282227			
+A12	49FL	Hoxc13	STANDARD	SYBR	None	32.6219253540039	32.5458984375	0.081859603524208	1			0	1	1	3	25	85.2418060302734			
+B1																				
+B2																				
+B3																				
+B4																				
+B5																				
+B6																				
+B7																				
+B8																				
+B9																				
+B10	49FL	Hoxc13	STANDARD	SYBR	None	34.2586135864258	34.060619354248	0.207932516932487	0.5			0	1	1	3	26	85.5412979125977			
+B11	49FL	Hoxc13	STANDARD	SYBR	None	34.0792465209961	34.060619354248	0.207932516932487	0.5			0	1	1	3	26	85.3911514282227			
+B12	49FL	Hoxc13	STANDARD	SYBR	None	33.8440017700195	34.060619354248	0.207932516932487	0.5			0	1	1	3	26	85.3911514282227			
+C1																				
+C2																				
+C3																				
+C4																				
+C5																				
+C6																				
+C7																				
+C8																				
+C9																				
+C10	49FL	Hoxc13	STANDARD	SYBR	None	35.2423095703125	35.0566253662109	0.215485662221909	0.25			0	1	1	3	27	85.5412979125977			
+C11	49FL	Hoxc13	STANDARD	SYBR	None	35.1072235107422	35.0566253662109	0.215485662221909	0.25			0	1	1	3	27	85.5404968261719			
+C12	49FL	Hoxc13	STANDARD	SYBR	None	34.8203430175781	35.0566253662109	0.215485662221909	0.25			0	1	1	3	27	85.5404968261719	77.0277328491211		
+D1																				
+D2																				
+D3																				
+D4																				
+D5																				
+D6																				
+D7																				
+D8																				
+D9																				
+D10	49FL	Hoxc13	STANDARD	SYBR	None	36.0736389160156	36.3763771057129	0.294593155384064	0.125			0	1	1	3	28	85.5412979125977			
+D11	49FL	Hoxc13	STANDARD	SYBR	None	36.3934059143066	36.3763771057129	0.294593155384064	0.125			0	1	1	3	29	85.5404968261719			
+D12	49FL	Hoxc13	STANDARD	SYBR	None	36.6620864868164	36.3763771057129	0.294593155384064	0.125			0	1	1	3	28	85.5404968261719			
+E1																				
+E2																				
+E3																				
+E4																				
+E5																				
+E6																				
+E7																				
+E8																				
+E9																				
+E10	49FL	Hoxc13	STANDARD	SYBR	None	38.0765151977539	37.7174987792969	1.2688319683075	0.0625			0	1	1	3	30	85.8399505615234			
+E11	49FL	Hoxc13	STANDARD	SYBR	None	38.768138885498	37.7174987792969	1.2688319683075	0.0625			0	1	1	3	30	85.8391952514648	71.8005981445313		
+E12	49FL	Hoxc13	STANDARD	SYBR	None	36.3078422546387	37.7174987792969	1.2688319683075	0.0625			0	1	1	3	28	77.6251220703125	85.6898498535156		
+F1																				
+F2																				
+F3																				
+F4																				
+F5																				
+F6																				
+F7																				
+F8																				
+F9																				
+F10	49FL	Hoxc13	STANDARD	SYBR	None	37.8734359741211	37.5638618469238	0.43780392408371	0.03125			0	1	1	3	30	85.6906280517578	72.4004821777344		
+F11	49FL	Hoxc13	STANDARD	SYBR	None	37.2542877197266	37.5638618469238	0.43780392408371	0.03125			0	1	1	3	29	85.6898498535156			
+F12	49FL	Hoxc13	STANDARD	SYBR	None	Undetermined	37.5638618469238	0.43780392408371	0.03125			0	1	1	3	32	85.9885406494141			
+G1																				
+G2																				
+G3																				
+G4																				
+G5																				
+G6																				
+G7																				
+G8																				
+G9																				
+G10																				
+G11																				
+G12																				
+H1																				
+H2																				
+H3																				
+H4																				
+H5																				
+H6																				
+H7		Hoxc13	NTC	SYBR	None	Undetermined						0	1	1	3	39	61.3480911254883	70.756721496582		
+H8		Hoxc13	NTC	SYBR	None	Undetermined						0	1	1	3	8	61.3480911254883	70.4580383300781	87.3338317871094	
+H9																				
+H10																				
+H11																				
+H12																				
+ 
