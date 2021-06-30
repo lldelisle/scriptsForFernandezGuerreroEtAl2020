@@ -7,19 +7,20 @@
 #SBATCH --nodes 1
 #SBATCH --mem 30G
 #SBATCH --cpus-per-task 16
-#SBATCH --time 2:00:00
+#SBATCH --time 4:00:00
 #SBATCH --array=1-16
 #SBATCH --job-name RNAseqMerged93
 #SBATCH --chdir /scratch/ldelisle/Merged93
 
 # This script remove adapters and bad quality with cutadapt
 # make alignment with STAR ENCODE parameters
+# Run DEXseq quantification
 # Evaluate FPKM with cufflinks
 # Coverage on uniquely mapped reads with bedtools
 
 path='/scratch/ldelisle/Merged93/'
 pathForFastq='/scratch/ldelisle/Merged93/newFastq/'
-pathForTable="table.txt"
+pathForTable="${path}/table.txt"
 pathForIndex='/scratch/ldelisle/STARIndex/'
 pathForFasta='/home/ldelisle/genomes/fasta/'
 genome=mm10
@@ -28,18 +29,35 @@ versionOfCufflinks="2.2.1"
 
 module purge
 module load gcc/7.4.0 #required for bowtie2, samtools and bedtools
-module load bowtie2/2.3.5
 module load samtools/1.9
 module load bedtools2/2.27.1
+module load openblas/0.3.6-openmp
+module load r/3.6.0
 # cutadapt is version 1.6 working with python 3.6.1 built with intel 17.0.2
 
 indexPath=${pathForIndex}${genome}
 gtfFile=${path}mergeOverlapGenesOfFilteredTranscriptsOfMus_musculus.GRCm38.93_ExonsOnly_UCSC.gtf
+gtfFileForDEXseq=${gtfFile/.gtf/_no_merge.forDEXSeq.gtf}
 
 # Create a gtf file with a gene on chrM for each direction to filter them in cufflinks
 if [ "$SLURM_ARRAY_TASK_ID" = 1 ]; then
   echo "chrM	chrM_gene	exon	0	16299	.	+	.	gene_id \"chrM_gene_plus\"; transcript_id \"chrM_tx_plus\"; exon_id \"chrM_ex_plus\";
 chrM	chrM_gene	exon	0	16299	.	-	.	gene_id \"chrM_gene_minus\"; transcript_id \"chrM_tx_minus\"; exon_id \"chrM_ex_minus\";" > MTmouse.gtf
+fi
+
+# Prepare for DEXseq
+if [ "$SLURM_ARRAY_TASK_ID" = 1 ] && [ ! -e $gtfFileForDEXseq ]; then
+  # install dependencies for DEXseq
+  echo "if (!\"devtools\" %in% installed.packages()){
+  install.packages(\"devtools\", repos = \"https://stat.ethz.ch/CRAN/\")
+}
+devtools::install_github(\"lldelisle/usefulLDfunctions\")
+library(usefulLDfunctions)
+safelyLoadAPackageInCRANorBioconductor(\"DEXSeq\")
+" > dependencies.R
+  Rscript dependencies.R
+
+  python2 $(Rscript <(echo "cat(system.file( \"python_scripts\", package=\"DEXSeq\", mustWork=TRUE ))"))/dexseq_prepare_annotation.py -r no $gtfFile $gtfFileForDEXseq &>createMErgedFilteredGTFforDEXseq.log
 fi
 
 sample=`cat $pathForTable | awk -v i=$SLURM_ARRAY_TASK_ID 'NR==i{print $2}'`
@@ -53,6 +71,12 @@ cd $pathResults
 
 # Remove TruSeq adapter, bases with quality below 30 and only write reads longer than 15bp.
 if [ ! -e ${pathResults}${sample}-cutadapt.fastq.gz ]; then
+  if [ ! -e ${pathForFastq}${fastqFile} ]; then
+    module load sra-toolkit/2.9.6
+    sra=`cat $pathForTable | awk -v i=$SLURM_ARRAY_TASK_ID 'NR==i{print $3}'`
+    fasterq-dump -o temp.fastq ${sra}
+    gzip -c temp.fastq > ${pathForFastq}${fastqFile}
+  fi
   cutadapt -m 15 -j 16 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCAC -q 30 -o ${pathResults}${sample}-cutadapt.fastq.gz ${pathForFastq}${fastqFile} > ${pathResults}${sample}_report-cutadapt.txt
   mkdir -p ${path}allFinalFiles/reports/
   cp ${pathResults}${sample}_report-cutadapt.txt ${path}allFinalFiles/reports/
@@ -92,6 +116,22 @@ if { [ ! -e accepted_hits_unique_${sample}.bam ] && [ -s ${pathResults}Aligned.s
   samtools view -H Aligned.sortedByCoord.out.bam >  tmp.header
   samtools view -@ 5 Aligned.sortedByCoord.out.bam | grep  -w "NH:i:1" | cat tmp.header - | samtools view -@ 5 -b > accepted_hits_unique_${sample}.bam
   rm tmp.header
+fi
+
+# DEXSeq files are generated
+if [ ! -e ${path}allFinalFiles/dexseqCount_${sample}.txt ] && [ -e accepted_hits_unique_${sample}.bam ] ;then
+ echo "Counting with DEXseq"
+ echo "python2 $(Rscript <(echo "cat(system.file( \"python_scripts\", package=\"DEXSeq\", mustWork=TRUE ))"))/dexseq_count.py -a 10 -s reverse -f bam $gtfFileForDEXseq accepted_hits_unique_${sample}.bam dexseqCount_${sample}.txt"> DEXSeq.sh
+ echo "mkdir -p ${path}allFinalFiles">>DEXSeq.sh
+ echo "mv dexseqCount_${sample}.txt ${path}allFinalFiles/">>DEXSeq.sh
+ bash DEXSeq.sh &
+fi
+
+# STAR counts per gene are changed to htseqcount like format
+if [ ! -e ${path}allFinalFiles/htseqCount_${sample}.txt ] && [ -e ReadsPerGene.out.tab ];then 
+  mkdir -p ${path}allFinalFiles
+  echo "write htseqCount"
+  cat ReadsPerGene.out.tab | awk '{print $1"\t"$4}' > ${path}allFinalFiles/htseqCount_${sample}.txt
 fi
 
 # This is to make the bedgraph of coverage

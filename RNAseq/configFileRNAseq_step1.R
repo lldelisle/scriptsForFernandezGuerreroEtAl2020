@@ -10,3 +10,4 @@ outputFolderForStep1<-"/scratch/ldelisle/Merged93/mergedTables/"
 mergeFPKM<-T
 oneLinePerEnsemblID<-T #By default cufflinks split the transcripts which do not overlap in different locus and so different lines, put T if you want to sum the FPKM for non overlapping transcripts (put F if not).
 
+mergeCounts<-T 

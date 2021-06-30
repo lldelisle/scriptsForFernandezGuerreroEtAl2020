@@ -16,7 +16,7 @@ configFile="configFileRNAseq_step1.R"
 module purge
 module load gcc/7.4.0  openblas/0.3.6-openmp r/3.6.0
 
-#Adjust the samplesplan.txt to add the cufflinks path
+# Adjust the samplesplan.txt to add the cufflinks path
 samplesPlanFile=`cat $configFile| awk -F '=|<-|#' '$1=="samplesPlan"{print $2}' | tr -d "\"" | tr -d " "`
 if [ ! `grep "cufflinks_file" $samplesPlanFile` ]; then
   # The path of each cufflinks file (FPKM) is ${path}/allFinalFiles/FPKM_${sample}.txt
@@ -27,6 +27,21 @@ if [ ! `grep "cufflinks_file" $samplesPlanFile` ]; then
   
   rm CuffCol.txt
 fi
+# Adjust the samplesplan.txt to add the htseqcount path
+if [ ! $(grep "htseq_count_file" $samplesPlanFile) ]; then
+  # The path of each count file (htseqcount) is ${path}/allFinalFiles/htseqCount_${sample}.txt
+	cat $samplesPlanFile | awk -v pa=$path 'BEGIN{print "htseq_count_file"}NR>1{print pa"/allFinalFiles/htseqCount_"$1".txt"}' > htseqCol.txt
+  # The htseqcount column is added to the samplesPlan
+	if [ -e ${samplesPlanFile}_withPaths ];then
+		mv ${samplesPlanFile}_withPaths tmp
+		paste -d "\t" tmp htseqCol.txt > ${samplesPlanFile}_withPaths
+		rm tmp
+	else
+		paste -d "\t" $samplesPlanFile htseqCol.txt > ${samplesPlanFile}_withPaths
+	fi
+	rm htseqCol.txt
+fi
+
 if [ -e ${samplesPlanFile}_withPaths ]; then
   # The config file is modified to use the new samplesPlan file
   cat $configFile | sed "s#$samplesPlanFile#${samplesPlanFile}_withPaths#" > ${configFile}_withPaths
